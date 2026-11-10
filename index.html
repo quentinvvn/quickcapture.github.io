@@ -34,6 +34,19 @@
       .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
       .tags span { padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 12px; }
       footer { margin-top: 36px; text-align: center; font-size: 12.5px; color: var(--muted); }
+      .rich { margin: 0 0 8px; overflow-wrap: anywhere; }
+      .rich > :first-child { margin-top: 0; }
+      .rich :is(h1, h2, h3, h4, h5, h6) { margin: 0.6em 0 0.3em; line-height: 1.25; font-size: 1.05em; }
+      .rich h1 { font-size: 1.35em; } .rich h2 { font-size: 1.2em; } .rich h3 { font-size: 1.1em; }
+      .rich :is(p, ul, ol, pre, table) { margin: 0 0 0.6em; }
+      .rich :is(ul, ol) { padding-left: 1.4em; }
+      .rich code { padding: 0 4px; border-radius: 4px; background: var(--surface-2); font: 0.92em ui-monospace, Consolas, monospace; }
+      .rich pre { padding: 8px 10px; border-radius: 6px; background: var(--surface-2); overflow-x: auto; }
+      .rich pre code { padding: 0; background: none; }
+      .rich .scroll { overflow-x: auto; }
+      .rich table { border-collapse: collapse; font-size: 0.92em; }
+      .rich :is(th, td) { padding: 4px 8px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+      .rich th { background: var(--surface-2); }
     </style>
   </head>
   <body>
@@ -76,9 +89,41 @@
         }
       };
 
+      // Mise en forme d'un texte : HTML relu dans un document inerte, puis
+      // reconstruit balise par balise d'après une liste blanche. Jamais d'innerHTML.
+      const KEEP = new Set(['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'DIV', 'BR', 'HR', 'STRONG', 'EM', 'U', 'S', 'MARK', 'CODE', 'PRE', 'SUP', 'SUB',
+        'BLOCKQUOTE', 'UL', 'OL', 'LI', 'TABLE', 'CAPTION', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'A']);
+      const DROP = new Set(['SCRIPT', 'STYLE', 'TEMPLATE', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'MATH', 'IMG', 'VIDEO', 'AUDIO', 'FORM', 'INPUT', 'BUTTON', 'TEXTAREA', 'SELECT']);
+      function cleanInto(source, target) {
+        for (const node of source.childNodes) {
+          if (node.nodeType === 3) target.append(node.data);
+          if (node.nodeType !== 1) continue;
+          const tag = node.tagName.toUpperCase();
+          if (DROP.has(tag)) continue;
+          if (!KEEP.has(tag) || (tag === 'A' && !safeUrl(node.getAttribute('href') || ''))) {
+            cleanInto(node, target);
+            continue;
+          }
+          const copy = document.createElement(tag);
+          if (tag === 'A') Object.assign(copy, { href: safeUrl(node.getAttribute('href')), target: '_blank', rel: 'noopener noreferrer' });
+          for (const attr of ['colspan', 'rowspan']) {
+            const n = parseInt(node.getAttribute(attr), 10);
+            if ((tag === 'TD' || tag === 'TH') && n > 1 && n <= 50) copy.setAttribute(attr, String(n));
+          }
+          cleanInto(node, copy);
+          // Un tableau large défile dans sa carte au lieu de la déborder.
+          target.append(tag === 'TABLE' ? el('div', { className: 'scroll' }, copy) : copy);
+        }
+      }
+      function richText(html) {
+        const box = el('div', { className: 'rich' });
+        cleanInto(new DOMParser().parseFromString(html, 'text/html').body, box);
+        return box;
+      }
+
       function card(item) {
         const body = el('div', { className: 'body' }, el('h2', { textContent: item.title || 'Sans titre' }));
-        if (item.type === 'text') body.append(el('blockquote', { textContent: item.content }));
+        if (item.type === 'text') body.append(item.html ? richText(item.html) : el('blockquote', { textContent: item.content }));
         else if (item.type === 'link') body.append(el('p', { style: 'margin:0 0 8px' }, link(item.content)));
 
         const meta = el('div', { className: 'meta' }, new Date(item.createdAt).toLocaleDateString('fr-FR', { dateStyle: 'medium' }));
@@ -94,8 +139,13 @@
 
       (async () => {
         const token = new URLSearchParams(location.search).get('t') || '';
+        if (!token) {
+          // Page ouverte sans lien de partage : ce n'est pas une erreur, il n'y a simplement rien à afficher.
+          $('status').textContent = 'Cette page affiche une collection partagée depuis QuickCapture. Ouvrez le lien complet qui vous a été envoyé (il se termine par « ?t=… »).';
+          return;
+        }
         if (!/^[0-9a-f]{32,128}$/.test(token)) {
-          $('status').textContent = 'Lien de partage invalide.';
+          $('status').textContent = 'Lien de partage invalide ou incomplet.';
           return;
         }
         try {
