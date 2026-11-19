@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confidentialité — QuickCapture</title>
+    <style>
+      :root {
+        --bg: #f6f6fa; --surface: #fff; --border: #dfdfea; --text: #1c1c28; --muted: #6b6b80; --accent: #4f46e5;
+        color-scheme: light dark;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root { --bg: #13131a; --surface: #1c1c26; --border: #33334a; --text: #ececf4; --muted: #9c9cb4; --accent: #818cf8; }
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif; }
+      main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+      h1 { margin: 0 0 4px; font-size: 28px; }
+      h2 { margin: 32px 0 8px; font-size: 19px; }
+      p, ul { margin: 0 0 12px; }
+      li { margin-bottom: 4px; }
+      .muted { color: var(--muted); }
+      .summary { margin: 20px 0; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+      a { color: var(--accent); }
+      table { width: 100%; border-collapse: collapse; font-size: 15px; }
+      th, td { padding: 8px 10px; border: 1px solid var(--border); text-align: left; vertical-align: top; }
+      th { background: var(--surface); }
+      .scroll { overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Politique de confidentialité</h1>
+      <p class="muted">Extension QuickCapture · dernière mise à jour : 10 novembre 2026</p>
+
+      <div class="summary">
+        <strong>En bref.</strong> Vos captures restent dans votre navigateur. Rien n’est envoyé tant que vous ne créez pas
+        de compte (facultatif) ou ne configurez pas de webhook. Pas de publicité, pas de statistiques d’usage, aucune
+        revente de données. Vous pouvez supprimer votre compte et toutes vos données en ligne en un clic.
+      </div>
+
+      <h2>Qui est responsable</h2>
+      <p>
+        QuickCapture est développé et publié par quentinvvn, développeur indépendant, responsable du traitement des
+        données décrit ici. Contact : <a href="mailto:[ADRESSE DE CONTACT]">[ADRESSE DE CONTACT]</a>.
+      </p>
+
+      <h2>Sans compte : tout reste sur votre appareil</h2>
+      <p>
+        Les captures (textes, images, liens, screenshots, notes, tags, collections) et vos réglages sont enregistrés
+        dans le stockage local de votre navigateur. Le développeur n’y a pas accès et rien ne quitte votre appareil.
+      </p>
+      <p>
+        L’extension demande l’accès à tous les sites pour afficher le bouton « Capturer » après une sélection, capturer
+        une image ou une zone de la page, et re-surligner vos textes capturés si vous activez cette option. Le contenu
+        des pages n’est lu qu’au moment d’une capture que vous déclenchez, ou localement pour le surlignage ; il n’est
+        jamais envoyé ailleurs pour ces usages.
+      </p>
+
+      <h2>Avec un compte (facultatif) : synchronisation et partage</h2>
+      <p>Si vous créez un compte pour retrouver vos captures sur plusieurs appareils, ces données sont transmises :</p>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Données</th><th>Pourquoi</th></tr></thead>
+          <tbody>
+            <tr><td>Adresse e-mail et mot de passe</td><td>Créer le compte et vous connecter. Le mot de passe est stocké sous forme chiffrée (hachée) par le service d’authentification ; il n’est jamais conservé par l’extension.</td></tr>
+            <tr><td>Vos captures : textes et leur mise en forme, images et screenshots, adresses et titres des pages d’origine, tags, collections, notes, dates</td><td>Les synchroniser entre vos appareils.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Ces données sont hébergées par <strong>Supabase</strong> (base de données, authentification et stockage des
+        images), qui agit comme sous-traitant, dans la région [RÉGION SUPABASE]. Chaque compte n’a accès qu’à ses propres
+        données. Les échanges sont chiffrés (HTTPS).
+      </p>
+      <p>
+        <strong>Partage de collection.</strong> Si vous créez un lien de partage, toute personne disposant du lien peut
+        consulter la collection (titres, contenus, images, tags et adresses d’origine, mais pas vos notes). Vous pouvez
+        arrêter le partage à tout moment ; le lien cesse alors de fonctionner. La page de partage est hébergée par GitHub
+        Pages, qui peut enregistrer l’adresse IP des visiteurs dans ses journaux techniques.
+      </p>
+
+      <h2>Webhook (facultatif)</h2>
+      <p>
+        Si vous l’activez, chaque nouvelle capture est envoyée à l’adresse que vous avez choisie (Zapier, Make, votre
+        serveur…). Ces données vont directement de votre navigateur à ce service ; le développeur de QuickCapture ne les
+        reçoit pas. Le traitement relève alors du service que vous avez choisi.
+      </p>
+
+      <h2>Ce que QuickCapture ne fait pas</h2>
+      <ul>
+        <li>aucune publicité, aucun outil de statistiques ou de suivi ;</li>
+        <li>aucune vente, location ou cession de données ;</li>
+        <li>aucune utilisation de vos données pour autre chose que les fonctions décrites ici ;</li>
+        <li>aucun code chargé depuis Internet : tout le code de l’extension est inclus dans le paquet publié.</li>
+      </ul>
+      <p>
+        Le lien « Soutenir le projet » ouvre une page Buy Me a Coffee dans un nouvel onglet ; aucune donnée ne lui est
+        transmise par l’extension.
+      </p>
+
+      <h2>Durée de conservation</h2>
+      <p>
+        Les données en ligne sont conservées tant que votre compte existe. Une capture supprimée est effacée de votre
+        compte à la synchronisation suivante (seul un identifiant technique, sans contenu, est gardé pour propager la
+        suppression à vos autres appareils). La suppression du compte efface immédiatement le compte, les captures, les
+        images et les liens de partage.
+      </p>
+
+      <h2>Vos droits</h2>
+      <p>Conformément au RGPD, vous pouvez à tout moment :</p>
+      <ul>
+        <li><strong>accéder à vos données et les récupérer</strong> : dashboard → Exporter → JSON (sauvegarde complète) ;</li>
+        <li><strong>les rectifier</strong> : modifiez une capture depuis le dashboard ;</li>
+        <li><strong>les effacer</strong> : options de l’extension → « Supprimer mon compte et mes données en ligne » ;</li>
+        <li><strong>vous opposer au traitement</strong> : déconnectez-vous ; plus rien n’est envoyé.</li>
+      </ul>
+      <p>
+        Pour toute question ou demande : <a href="mailto:[ADRESSE DE CONTACT]">[ADRESSE DE CONTACT]</a>. Vous pouvez aussi
+        adresser une réclamation à la CNIL (<a href="https://www.cnil.fr" rel="noopener noreferrer">cnil.fr</a>).
+      </p>
+
+      <h2>Modifications</h2>
+      <p>
+        En cas de changement de cette politique, la date ci-dessus est mise à jour. Un changement important (nouvelle
+        donnée transmise, nouveau prestataire) sera signalé dans les notes de version de l’extension.
+      </p>
+    </main>
+  </body>
+</html>
